@@ -1,0 +1,6 @@
+[package]
+name = "p002-index-out-of-bounds-not-compile-time-warning"
+version = "0.1.0"
+edition = "2024"
+
+[dependencies]
