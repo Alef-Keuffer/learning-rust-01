@@ -1,6 +1,6 @@
 {}: let
   # Rolling updates, not deterministic.
-  pkgs = import (fetchTarball "channel:nixpkgs-unstable") {};
+  pkgs = import (fetchTarball "https://channels.nixos.org/nixpkgs-unstable/nixexprs.tar.xz") {};
 in
   pkgs.mkShell {
     nativeBuildInputs = with pkgs; [cargo rustc gcc rustfmt clippy];
