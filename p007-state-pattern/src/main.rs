@@ -10,7 +10,7 @@ fn main() {
     post.request_review();
     assert_eq!("", post.content());
 
-    post.approve();
+    let p = post.approve();
     assert_eq!("", post.content());
 
     post.approve();

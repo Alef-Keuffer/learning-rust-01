@@ -258,6 +258,56 @@ mutating it. The vector can grow in size beyond its original capacity and
 reallocation may require to move the location of the container in memory.
 Therefore, the reference would be invalidated.
 
+## Question take_while Ch 21 multithreaded web server
+
+Why does the code below only print on request? Furthermore, it only seems to print after I make the first request, i.e., it's as if it dropped the first request and thereafter it printed the requests.
+
+```rs
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&stream);
+    let http_request: Vec<_> = buf_reader
+        .lines()
+        .map(Result::unwrap)
+        .take_while(|line| true)
+        .collect();
+
+    println!("Request: {http_request:#?}");
+}
+```
+
+While this code
+
+```rs
+fn handle_connection(mut stream: TcpStream) {
+    let buf_reader = BufReader::new(&stream);
+    let http_request: Vec<_> = buf_reader
+        .lines()
+        .map(Result::unwrap)
+        .take_while(|line| true)
+        .collect();
+
+    println!("Request: {http_request:#?}");
+}
+
+```
+
+prints this:
+
+```
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+Request: []
+```
+
+?
+
 <!--References-->
 
 [aquascope]: https://cel.cs.brown.edu/aquascope/ "Aquascope"
