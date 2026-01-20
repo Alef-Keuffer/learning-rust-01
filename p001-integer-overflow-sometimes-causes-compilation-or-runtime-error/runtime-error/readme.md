@@ -1,4 +1,5 @@
-`cargo build` and `cargo build --release` succeed without producing errors related to integer overflow.
+`cargo build` and `cargo build --release` succeed without producing errors
+related to integer overflow.
 
 `cargo run` failed with relevant message:
 

@@ -260,7 +260,28 @@ Therefore, the reference would be invalidated.
 
 ## Question take_while Ch 21 multithreaded web server
 
-Why does the code below only print on request? Furthermore, it only seems to print after I make the first request, i.e., it's as if it dropped the first request and thereafter it printed the requests.
+Taking into account this content at
+
+```rs
+use std::{
+    io::{BufReader, prelude::*},
+    net::{TcpListener, TcpStream},
+};
+
+fn main() {
+    let listener = TcpListener::bind("127.0.0.1:7878").unwrap();
+
+    for stream in listener.incoming() {
+        let stream = stream.unwrap();
+
+        handle_connection(stream);
+    }
+}
+```
+
+Why does the code below only print on request? Furthermore, it only seems to
+print after I make the first request, i.e., it's as if it dropped the first
+request and thereafter it printed the requests.
 
 ```rs
 fn handle_connection(mut stream: TcpStream) {
@@ -283,12 +304,11 @@ fn handle_connection(mut stream: TcpStream) {
     let http_request: Vec<_> = buf_reader
         .lines()
         .map(Result::unwrap)
-        .take_while(|line| true)
+        .take_while(|_| false)
         .collect();
 
     println!("Request: {http_request:#?}");
 }
-
 ```
 
 prints this:
@@ -307,6 +327,13 @@ Request: []
 ```
 
 ?
+
+`take_while` is necessary because otherwise we have an infinite iterator waiting
+for new lines from the buffer.
+
+Without `take_while`, when I refresh the page the browser probably sends "End of
+File" (EOF) signal to lines() breaking the loop. We're probably accumulating
+streams in the first case and always waiting for lines() stuck on the loop.
 
 <!--References-->
 
